@@ -7,6 +7,7 @@ import (
 	"spotsync/internal/auth"
 	"spotsync/internal/config"
 	"spotsync/internal/domain/user"
+	"spotsync/internal/domain/zone"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v5"
@@ -40,6 +41,7 @@ func Start(db *gorm.DB, cfg *config.Config) {
 	})
 
 	user.RegisterRoutes(e, db, jwtService)
+	zone.RegisterRoutes(e, db, jwtService)
 
 	port := fmt.Sprintf(":%s", cfg.Port)
 	if err := e.Start(port); err != nil {
