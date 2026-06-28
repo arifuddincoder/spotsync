@@ -2,7 +2,9 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"spotsync/internal/auth"
 	"spotsync/internal/config"
 
 	"github.com/go-playground/validator/v10"
@@ -26,6 +28,11 @@ func Start(db *gorm.DB, cfg *config.Config) {
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.Use(middleware.RequestLogger())
+
+	jwtService, err := auth.NewJWTService(cfg.JwtSecret)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	e.GET("/", func(c *echo.Context) error {
 		return c.String(http.StatusOK, "Hello from go SpotSync")
