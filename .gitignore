@@ -1,0 +1,51 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/go-library
+/bin/
+/dist/
+/app
+# Go build cache
+*.o
+*.a
+*.test
+*.out
+
+# Go module download cache
+vendor/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Air live reload
+tmp/
+.air.toml.bak
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Database
+*.sql.bak
+dump.sql
+
+# Test coverage
+coverage.out
+coverage.html
+
+# Uploaded files (if any)
+uploads/
