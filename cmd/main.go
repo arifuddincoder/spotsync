@@ -10,6 +10,6 @@ func main() {
 	cfg := config.LoadEnv()
 	db := config.ConnectDatabase(cfg)
 	db.AutoMigrate(&user.User{})
-
+	user.SeedAdmin(user.NewRepository(db), cfg)
 	server.Start(db, cfg)
 }

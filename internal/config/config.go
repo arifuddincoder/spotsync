@@ -8,9 +8,12 @@ import (
 )
 
 type Config struct {
-	Port      string
-	Dsn       string
-	JwtSecret string
+	Port          string
+	Dsn           string
+	JwtSecret     string
+	AdminName     string
+	AdminEmail    string
+	AdminPassword string
 }
 
 func LoadEnv() *Config {
@@ -20,8 +23,11 @@ func LoadEnv() *Config {
 	}
 
 	return &Config{
-		Port:      os.Getenv("PORT"),
-		Dsn:       os.Getenv("DSN"),
-		JwtSecret: os.Getenv("JWT_SECRET_KEY"),
+		Port:          os.Getenv("PORT"),
+		Dsn:           os.Getenv("DSN"),
+		JwtSecret:     os.Getenv("JWT_SECRET_KEY"),
+		AdminName:     os.Getenv("ADMIN_NAME"),
+		AdminEmail:    os.Getenv("ADMIN_EMAIL"),
+		AdminPassword: os.Getenv("ADMIN_PASSWORD"),
 	}
 }
