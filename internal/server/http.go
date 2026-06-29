@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"spotsync/internal/auth"
 	"spotsync/internal/config"
+	"spotsync/internal/domain/reservation"
 	"spotsync/internal/domain/user"
 	"spotsync/internal/domain/zone"
 
@@ -42,6 +43,7 @@ func Start(db *gorm.DB, cfg *config.Config) {
 
 	user.RegisterRoutes(e, db, jwtService)
 	zone.RegisterRoutes(e, db, jwtService)
+	reservation.RegisterRoutes(e, db, jwtService)
 
 	port := fmt.Sprintf(":%s", cfg.Port)
 	if err := e.Start(port); err != nil {
