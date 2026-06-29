@@ -22,4 +22,13 @@ func RegisterRoutes(e *echo.Echo, db *gorm.DB, jwtService auth.JWTService) {
 		middlewares.AuthMiddleware(jwtService),
 		middlewares.RequireRole("admin"),
 	)
+	api.PUT("/:id", h.UpdateZone,
+		middlewares.AuthMiddleware(jwtService),
+		middlewares.RequireRole("admin"),
+	)
+
+	api.DELETE("/:id", h.DeleteZone,
+		middlewares.AuthMiddleware(jwtService),
+		middlewares.RequireRole("admin"),
+	)
 }
