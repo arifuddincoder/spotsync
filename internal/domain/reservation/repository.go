@@ -31,13 +31,8 @@ func NewRepository(db *gorm.DB) Repository {
 	return &repository{db: db}
 }
 
-// CreateReservation — "EV Spot Bottleneck" সমাধান।
-// পুরো check + insert একটা Transaction-এর ভেতরে, এবং zone row-টা
-// FOR UPDATE দিয়ে lock করা হয়, যাতে একই zone-এর জন্য আসা concurrent
-// request গুলো একটার পর একটা (serialized) চলে — কখনো over-capacity হবে না।
 func (r *repository) CreateReservation(res *Reservation) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
-		// ১) zone row-টা lock করো (SELECT ... FOR UPDATE)
 		var z zone.ParkingZone
 		if err := tx.
 			Clauses(clause.Locking{Strength: "UPDATE"}).
@@ -48,7 +43,6 @@ func (r *repository) CreateReservation(res *Reservation) error {
 			return err
 		}
 
-		// ২) একই plate-এর active reservation আছে কিনা চেক (duplicate guard → 409)
 		var dup int64
 		if err := tx.Model(&Reservation{}).
 			Where("license_plate = ? AND status = ?", res.LicensePlate, StatusActive).
@@ -59,7 +53,6 @@ func (r *repository) CreateReservation(res *Reservation) error {
 			return ErrDuplicatePlate
 		}
 
-		// ৩) এই zone-এ এখন কতগুলো active reservation আছে গুনি
 		var active int64
 		if err := tx.Model(&Reservation{}).
 			Where("zone_id = ? AND status = ?", res.ZoneID, StatusActive).
@@ -67,23 +60,19 @@ func (r *repository) CreateReservation(res *Reservation) error {
 			return err
 		}
 
-		// ৪) capacity চেক — জায়গা না থাকলে ZoneFull
 		if int(active) >= z.TotalCapacity {
 			return ErrZoneFull
 		}
 
-		// ৫) একই tx-এর ভেতরেই reservation তৈরি করি।
-		//    Omit(clause.Associations) → শুধু UserID/ZoneID column বসবে,
-		//    ভুল করে User/Zone টেবিল upsert হবে না।
 		res.Status = StatusActive
 		if err := tx.Omit(clause.Associations).Create(res).Error; err != nil {
 			if errors.Is(err, gorm.ErrDuplicatedKey) {
-				return ErrDuplicatePlate // → handler 409 দেবে
+				return ErrDuplicatePlate
 			}
 			return err
 		}
 
-		return nil // nil রিটার্ন করলে tx commit হবে; error দিলে rollback
+		return nil
 	})
 }
 

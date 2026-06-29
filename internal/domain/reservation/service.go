@@ -112,7 +112,6 @@ func (s *service) CancelReservation(userID uint, role string, reservationID uint
 		return ErrReservationNotFound
 	}
 
-	// driver শুধু নিজেরটা cancel করতে পারবে; admin যেকোনোটা পারবে
 	if res.UserID != userID && role != "admin" {
 		return ErrNotOwner
 	}
@@ -121,6 +120,5 @@ func (s *service) CancelReservation(userID uint, role string, reservationID uint
 		return ErrAlreadyCancelled
 	}
 
-	// status = cancelled করলেই spot ফ্রি হয়ে যায় (available_spots শুধু active গোনে)
 	return s.repo.UpdateStatus(res, StatusCancelled)
 }

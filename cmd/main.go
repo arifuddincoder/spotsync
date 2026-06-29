@@ -12,7 +12,7 @@ func main() {
 	cfg := config.LoadEnv()
 	db := config.ConnectDatabase(cfg)
 	db.AutoMigrate(&user.User{}, &zone.ParkingZone{})
-	if err := reservation.Migrate(db); err != nil { // partial index সহ
+	if err := reservation.Migrate(db); err != nil {
 		panic("failed to migrate reservations: " + err.Error())
 	}
 	user.SeedAdmin(user.NewRepository(db), cfg)

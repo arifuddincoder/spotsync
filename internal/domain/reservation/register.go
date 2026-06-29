@@ -17,11 +17,9 @@ func RegisterRoutes(e *echo.Echo, db *gorm.DB, jwtService auth.JWTService) {
 
 	api := e.Group("/api/v1/reservations")
 
-	// সব রিজার্ভেশন রুটে লগইন লাগবে
 	api.POST("", h.Reserve, authMW)
 	api.GET("/my-reservations", h.GetMyReservations, authMW)
 	api.DELETE("/:id", h.CancelReservation, authMW)
 
-	// admin only
 	api.GET("", h.GetAllReservations, authMW, middlewares.RequireRole("admin"))
 }

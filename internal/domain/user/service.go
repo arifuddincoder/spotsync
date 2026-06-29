@@ -36,7 +36,6 @@ func (s *service) RegisterUser(req dto.RegisterRequest) (*dto.UserResponse, erro
 		Role:  role,
 	}
 
-	// পাসওয়ার্ড hash করে user.Password-এ বসাও
 	if err := user.hashPassword(req.Password); err != nil {
 		return nil, err
 	}
