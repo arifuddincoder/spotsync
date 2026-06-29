@@ -39,11 +39,7 @@ func (h *handler) CreateZone(c *echo.Context) error {
 
 	response, err := h.service.CreateZone(req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-			Success: false,
-			Message: "Failed to create parking zone",
-			Errors:  err.Error(),
-		})
+		return httpresponse.InternalError(c, "Failed to create parking zone", err)
 	}
 
 	return c.JSON(http.StatusCreated, httpresponse.Success{
@@ -56,11 +52,7 @@ func (h *handler) CreateZone(c *echo.Context) error {
 func (h *handler) GetAllZones(c *echo.Context) error {
 	response, err := h.service.GetAllZones()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-			Success: false,
-			Message: "Failed to retrieve parking zones",
-			Errors:  err.Error(),
-		})
+		return httpresponse.InternalError(c, "Failed to retrieve parking zones", err)
 	}
 
 	return c.JSON(http.StatusOK, httpresponse.Success{
@@ -89,11 +81,7 @@ func (h *handler) GetZone(c *echo.Context) error {
 				Errors:  err.Error(),
 			})
 		}
-		return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-			Success: false,
-			Message: "Failed to retrieve parking zone",
-			Errors:  err.Error(),
-		})
+		return httpresponse.InternalError(c, "Failed to retrieve parking zone", err)
 	}
 
 	return c.JSON(http.StatusOK, httpresponse.Success{
@@ -138,11 +126,7 @@ func (h *handler) UpdateZone(c *echo.Context) error {
 				Errors:  err.Error(),
 			})
 		}
-		return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-			Success: false,
-			Message: "Failed to update parking zone",
-			Errors:  err.Error(),
-		})
+		return httpresponse.InternalError(c, "Failed to update parking zone", err)
 	}
 
 	return c.JSON(http.StatusOK, httpresponse.Success{

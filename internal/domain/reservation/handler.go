@@ -62,11 +62,7 @@ func (h *handler) Reserve(c *echo.Context) error {
 				Errors:  err.Error(),
 			})
 		default:
-			return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-				Success: false,
-				Message: "Failed to create reservation",
-				Errors:  err.Error(),
-			})
+			return httpresponse.InternalError(c, "Failed to create reservation", err)
 		}
 	}
 
@@ -89,11 +85,7 @@ func (h *handler) GetMyReservations(c *echo.Context) error {
 
 	resp, err := h.service.GetMyReservations(userID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-			Success: false,
-			Message: "Failed to retrieve reservations",
-			Errors:  err.Error(),
-		})
+		return httpresponse.InternalError(c, "Failed to retrieve reservations", err)
 	}
 
 	return c.JSON(http.StatusOK, httpresponse.Success{
@@ -106,11 +98,7 @@ func (h *handler) GetMyReservations(c *echo.Context) error {
 func (h *handler) GetAllReservations(c *echo.Context) error {
 	resp, err := h.service.GetAllReservations()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-			Success: false,
-			Message: "Failed to retrieve reservations",
-			Errors:  err.Error(),
-		})
+		return httpresponse.InternalError(c, "Failed to retrieve reservations", err)
 	}
 
 	return c.JSON(http.StatusOK, httpresponse.Success{
@@ -162,11 +150,7 @@ func (h *handler) CancelReservation(c *echo.Context) error {
 				Errors:  err.Error(),
 			})
 		default:
-			return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-				Success: false,
-				Message: "Failed to cancel reservation",
-				Errors:  err.Error(),
-			})
+			return httpresponse.InternalError(c, "Failed to cancel reservation", err)
 		}
 	}
 

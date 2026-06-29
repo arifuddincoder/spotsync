@@ -45,11 +45,7 @@ func (h *handler) RegisterUser(c *echo.Context) error {
 				Errors:  err.Error(),
 			})
 		}
-		return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-			Success: false,
-			Message: "Failed to create user",
-			Errors:  err.Error(),
-		})
+		return httpresponse.InternalError(c, "Failed to create user", err)
 	}
 
 	return c.JSON(http.StatusCreated, httpresponse.Success{
@@ -86,11 +82,7 @@ func (h *handler) LoginUser(c *echo.Context) error {
 				Errors:  err.Error(),
 			})
 		}
-		return c.JSON(http.StatusInternalServerError, httpresponse.Error{
-			Success: false,
-			Message: "Failed to login user",
-			Errors:  err.Error(),
-		})
+		return httpresponse.InternalError(c, "Failed to login user", err)
 	}
 
 	return c.JSON(http.StatusOK, httpresponse.Success{
