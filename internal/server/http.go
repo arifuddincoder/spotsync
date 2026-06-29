@@ -32,6 +32,20 @@ func Start(db *gorm.DB, cfg *config.Config) {
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.Use(middleware.RequestLogger())
 
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{
+			http.MethodGet, http.MethodPost, http.MethodPut,
+			http.MethodDelete, http.MethodOptions,
+		},
+		AllowHeaders: []string{
+			echo.HeaderOrigin,
+			echo.HeaderContentType,
+			echo.HeaderAuthorization,
+			echo.HeaderAccept,
+		},
+	}))
+
 	jwtService, err := auth.NewJWTService(cfg.JwtSecret)
 	if err != nil {
 		log.Fatal(err)
